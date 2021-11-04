@@ -62,9 +62,13 @@ class SetBot():
             svgs = div.find_elements(By.TAG_NAME, 'svg')
             number = len(svgs)
             uses = svgs[0].find_elements(By.TAG_NAME, 'use')
+            parent = div.find_element(By.XPATH, '..')
+            href = uses[0].get_attribute('href')
+            mask = uses[0].get_attribute('mask')
+            fill = uses[0].get_attribute('fill')
+            stroke = uses[1].get_attribute('stroke')
 
-            # print(number, use.get_attribute('href'), use.get_attribute('mask'), use.get_attribute('fill'))
-            all_cards.append(SetCard(div.find_element(By.XPATH, '..'), number, uses[0].get_attribute('href'), uses[0].get_attribute('mask'), uses[0].get_attribute('fill'), uses[1].get_attribute('stroke')))
+            all_cards.append(SetCard(parent, number, href, mask, fill, stroke))
         return all_cards
 
 bot = SetBot()
