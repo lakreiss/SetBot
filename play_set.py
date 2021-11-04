@@ -38,6 +38,8 @@ class SetBot():
         else:
             return False
 
+    # Any three cards that either have all the same values (len(set) == 1)
+    # or all different values (len(set) == 3) can be grouped together
     def find_match(self, processed_board):
         for i in range(len(processed_board)):
             for j in range(i + 1, len(processed_board)):
@@ -51,11 +53,16 @@ class SetBot():
                         return cards
         return None
 
+    # takes in a board_element
+    # returns a list of all the visible cards as SetCard objects
     def get_processed_board(self, board_element):
         board_divs = board_element.find_elements(By.TAG_NAME, 'div')
+        # jss82 seems to be the class that triggers visibility 
         visibile_divs = [board_div for board_div in board_divs if 'jss82' in board_div.get_attribute("class")]
         return self.get_processed_cards(visibile_divs)
     
+    # takes in the visible div elements
+    # returns a list of all the visible cards as SetCard objects
     def get_processed_cards(self, visibile_divs):
         all_cards = []
         for div in visibile_divs:
@@ -71,8 +78,11 @@ class SetBot():
             all_cards.append(SetCard(parent, number, href, mask, fill, stroke))
         return all_cards
 
-bot = SetBot()
-bot.begin_game()
+    def play_game(self):
+        self.begin_game()
+        while self.make_match():
+            continue
+        print("Game over")
 
-while bot.make_match():
-    continue
+bot = SetBot()
+bot.play_game()
